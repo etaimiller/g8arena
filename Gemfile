@@ -25,7 +25,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
-# Use Unicorn as the app server
+# Use Unicorn as the app serve
 # gem 'unicorn'
 
 # Use Capistrano for deployment
@@ -44,8 +44,8 @@ group :development, :test do
   gem 'database_cleaner'
   gem 'factory_girl_rails'
   gem 'byebug'
-  gem 'rspec-rails'
-  gem 'guard-rspec'
+  gem 'rspec-rails', require: 'rspec/rails'
+  gem 'guard-rspec', require: false
   gem 'guard-zeus'
   gem 'terminal-notifier-guard', '~>1.6.1'
 
