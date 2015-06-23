@@ -24,7 +24,28 @@ describe TeamManager do
   describe '.assemble' do
 
     context "with valid parameters" do
+      let(:valid_attrs) { { team: { users: [user1, user2].to_json } } }
 
+      subject { TeamManager.new(valid_attrs[:team]) }
+
+      it 'should return a Team object class' do
+        expect( subject.assemble.class ).to eq Team
+      end
+
+      it 'should return a team with the correct users' do
+        team = subject.assemble
+        expect( team.users ).to eq [user1, user2]
+      end
+    end
+
+    context "with invalid parameters" do
+      let(:invalid_attrs) { { team: { users: [user1, user2, "bad" ].to_json } } }
+
+      subject { TeamManager.new(invalid_attrs[:team]) }
+
+      it "should return a team" do
+        expect( subject.assemble ).to be nil
+      end
     end
   end
 

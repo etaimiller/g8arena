@@ -5,10 +5,11 @@ Rails.application.routes.draw do
       passwords: 'users/passwords'
     }
 
-  resource :matches, only: [:create, :index] do
-    collection do
-    end
-  end
+  resources :matches, only: [:create, :index]
+
+  resources :teams, only: [:create, :index]
+
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

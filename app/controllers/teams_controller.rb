@@ -4,7 +4,7 @@ class TeamsController < ActionController::Base
   def create
     team_manager = TeamManager.new(team_params)
     @team = team_manager.assemble
-    if team.save
+    if @team.present? && @team.save
       render json: {
         status: 'success',
         data: @team

@@ -7,9 +7,17 @@ class TeamManager
   end
 
   def assemble
-    team = Team.new
-    team.users << convert_to_users_collection
-    team
+    Team.transaction(requires_new: true) do
+      begin
+        team = Team.create
+        team.users = convert_to_users_collection
+        team.save!
+        team
+      rescue
+        raise ActiveRecord::Rollback
+        return nil
+      end
+    end
   end
 
 
