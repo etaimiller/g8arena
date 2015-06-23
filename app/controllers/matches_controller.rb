@@ -2,8 +2,9 @@ class MatchesController < ActionController::Base
   before_action :authenticate_user!
 
   def create
-    @match = Match.new(match_params)
-    if @match.save
+    match_processor = MatchProcessor.new(match_params)
+    @match = match_processor.added_match
+    if @match.save && match_processor.update_teams
       render json: {
         status: 'success',
         data: @match
