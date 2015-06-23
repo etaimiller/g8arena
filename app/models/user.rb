@@ -5,5 +5,7 @@ class User < ActiveRecord::Base
   include DeviseTokenAuth::Concerns::User
 
   has_many :user_teams, dependent: :destroy
-  has_many :teams, through: :user_teams
+  has_many :teams, through: :user_team
+
+  validates_format_of :email,:with => Devise::email_regexp
 end
