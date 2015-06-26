@@ -1,4 +1,4 @@
-class TeamsController < ActionController::Base
+class TeamsController < ApplicationController
   before_action :authenticate_user!
 
   def create
@@ -21,20 +21,48 @@ class TeamsController < ActionController::Base
     @teams = Team.all
     if @teams.empty?
       render json: {
-      status: 'success',
-      data: nil
-    }, status: :no_content
+        status: 'success',
+        data: nil
+      }, status: :no_content
+    else
+      teams_with_members = []
+      @teams.each do |team|
+        teams_with_members << hash_team_data(team)
+      end
+      render json: {
+        status: 'success',
+        data: teams_with_members
+      }, status: :ok
+    end
+  end
+
+  def available_users
+    @users = User.all
+    if @users.empty?
+      render json: {
+        status: 'success',
+        data: nil
+      }, status: :no_content
     else
       render json: {
-      status: 'success',
-      data: @teams
-    }, status: :ok
+        status: 'success',
+        data: @users
+      }, status: :ok
     end
   end
 
   private
     def team_params
       params.require(:team).permit(:users)
+    end
+
+    def hash_team_data(team)
+      new_hash = team.attributes
+      new_hash[:users] = []
+      team.users.each do |user|
+        new_hash[:users] << user
+      end
+      return new_hash
     end
 
 end

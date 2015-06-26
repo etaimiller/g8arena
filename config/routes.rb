@@ -1,13 +1,18 @@
 Rails.application.routes.draw do
-  mount_devise_token_auth_for 'User', at: 'auth', controllers: {
+  mount_devise_token_auth_for 'User', at: 'auth', skip: [:omniauth_callbacks], controllers: {
       registrations:  'users/registrations',
       sessions: 'users/sessions',
       passwords: 'users/passwords'
     }
 
-  resources :matches, only: [:create, :index]
+  resources :matches, only: [:create, :index] do
+  end
 
-  resources :teams, only: [:create, :index]
+  resources :teams, only: [:create, :index, :show, :destroy] do
+    collection do
+      get :available_users
+    end
+  end
 
 
   # The priority is based upon order of creation: first created -> highest priority.

@@ -9,8 +9,10 @@ class TeamManager
   def assemble
     Team.transaction(requires_new: true) do
       begin
+        users = convert_to_users_collection
+        team_already_exists?(users)
         team = Team.create
-        team.users = convert_to_users_collection
+        team.users = users
         team.save!
         team
       rescue
@@ -40,6 +42,18 @@ class TeamManager
       @users
     else
       nil
+    end
+  end
+
+  def team_already_exists?(users)
+    team_exists = false
+    Team.all.each do |team|
+      if team.users.sort == users.sort
+        team_exists = true
+      end
+    end
+    if team_exists
+      raise ActiveRecord::RecordInvalid
     end
   end
 

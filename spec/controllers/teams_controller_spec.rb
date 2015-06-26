@@ -25,6 +25,18 @@ describe TeamsController do
         post :create, valid_attrs, format: :json
         expect( JSON.parse(response.body)['data'].to_json ).to eq Team.last.to_json
       end
+
+      context "when team with these users already exists" do
+        let!(:team1) { create(:team) }
+
+        before do
+          team1.users << [user1, user2]
+          team1.save
+        end
+
+        it "should return a forbidden status"
+          :forbidden
+      end
     end
 
     context "with invalid parameters" do
@@ -54,6 +66,13 @@ describe TeamsController do
       let!(:team1) { create(:team) }
       let!(:team2) { create(:team) }
 
+      before do
+        @team1 = team1.attributes
+        @team1[:users] = []
+        @team2 = team2.attributes
+        @team2[:users] = []
+      end
+
       it "should return 200 - Ok" do
         get :index, format: :json
         expect(response).to have_http_status(:ok)
@@ -61,7 +80,7 @@ describe TeamsController do
 
       it "should return an array of teams" do
         get :index, format: :json
-        expect(JSON.parse(response.body)['data'].to_json).to eq [team1,team2].to_json
+        expect(JSON.parse(response.body)['data'].to_json).to eq [@team1,@team2].to_json
       end
     end
 
